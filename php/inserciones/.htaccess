@@ -1,0 +1,6 @@
+Options +FollowSymLinks -MultiViews
+
+RewriteEngine On
+
+
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+) insertar.php?peticion=$1&par1=$2&par2=$3&par3=$4&par4=$5&par5=$6 [L,QSA]

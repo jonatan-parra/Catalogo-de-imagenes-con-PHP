@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Mi catalogo</title>
+
+    <meta name="description" content="Catalogo">
+    <meta name="author" content="">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+  <div class="container">
+  	<div class="row">
+      <div class="page-header">
+				<h1 class="text-center">	Bienvenido a tu galeria de imagenes	</h1>
+        <button type="button" class="btn btn-info" id="btn_cerrar_sesion">Cerrar sesión</button>
+			</div>
+    </div>
+
+    <div class="contenido container">
+      <h1>Catálogo</h1>
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Aquí tienes todas tus imagenes,añade más imagenes cuando quieras!</h3>
+          <a id="modal-1" href="#modal-creacion" role="button" class="nivel btn btn-success center-block" data-toggle="modal">Subir imagen</a> <br>
+        </div>
+
+        <div class="col-md-6">
+          <img src="img/subir.png" alt="">
+          <img src="img/camara.png" alt="">
+          <img src="img/cloud.png" alt="">
+          <img src="img/foto.png" alt="">
+        </div>
+      </div>
+
+      <br> <br>
+
+      <!-- Sección donde se mostraran todas las imagenes del usuario--->
+      <h1>Mis imagenes</h1>
+      <h3>Pasa el cursor sobre ellas para ver los detalles</h3>
+      <div class="" id="mi_catalogo">
+        <div class="col-md-2">
+           <img src="img/foto.png" title="Nombre - descripcion" />
+           <br>
+           Jonatan
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+  </div> <!-- Fin container principal -->
+
+  <!-- Inicio de modal de creación-->
+  <div class="modal fade" id="modal-creacion" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> × </button>
+         <h4 class="modal-title text-center" id="myModalLabel"> <strong> Formulario de creación </strong> </h4>
+       </div>
+
+       <div class="modal-body">
+         <p> Ingrese todos los datos solicitados </p>
+         <form enctype="multipart/form-data" id="formulario_creacion" method="post">
+           <input type="hidden" name="peticion" value="agregar">
+
+           <label>Nombre:</label>
+           <input type="text"  name="par1" class="form-control" placeholder="Nombre de la imagen" required> <br>
+
+           <label>Descripción:</label>
+           <input type="text"  name="par2" class="form-control" placeholder="Descripción" required> <br>
+
+           <label>Categoría:</label> <br>
+           <select name="par3" id="select_categorias" required>  </select>
+          <br> <br>
+
+          <label>Imagen </label>
+          <input name="par4" type="file" accept="image/*" required /><br />
+         </form>
+       </div>
+       <div class="modal-footer">
+         <button type="submit" class="btn btn-success" form="formulario_creacion">Aceptar</button>
+         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+       </div>
+     </div>
+   </div>
+  </div>
+  <!-- Fin modal de creación-->
+
+  <!-- Inicio de modal de aceptación-->
+  <div class="modal fade" id="modal-aceptacion" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> × </button>
+         <h4 class="modal-title text-center" id="myModalLabel"> <strong> Estado del registro </strong> </h4>
+       </div>
+
+       <div class="modal-body">
+         <h2 class="text-center"> Su registro ha sido exitoso! </h2>
+         <img class="center-block" src="img/ok.png" alt="">
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-default" data-dismiss="modal">Listo</button>
+       </div>
+     </div>
+   </div>
+  </div>
+  <!-- Fin modal de aceptación-->
+
+  <!-- Inicio de modal de fallo-->
+  <div class="modal fade" id="modal-fallo" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> × </button>
+         <h4 class="modal-title text-center" id="myModalLabel"> <strong> Estado del registro </strong> </h4>
+       </div>
+
+       <div class="modal-body">
+         <h2 class="text-center"> Su registro ha fallado </h2>
+         <img class="center-block" src="img/fallo.png" alt="">
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-default" data-dismiss="modal">Listo</button>
+       </div>
+     </div>
+   </div>
+  </div>
+  <!-- Fin modal de fallo-->
+
+
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/scripts.js"></script>
+  </body>
+</html>
