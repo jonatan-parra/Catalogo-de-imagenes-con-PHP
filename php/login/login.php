@@ -16,13 +16,14 @@
 
   // ---------- Fin configuracion -------------- //
   function cerrar_sesion(){
-    $usuario    = mysql_real_escape_string( $_POST['par1'] );
-    $token      = mysql_real_escape_string( $_POST['par2'] );
-    $resultado  = mysql_query("  SELECT usu_nombres FROM usuario
-                                 WHERE usu_nickname = '$usuario' AND usu_token = '$token' ");
+    $id_usuario    = mysql_real_escape_string( $_POST['par1'] );
+    $token         = mysql_real_escape_string( $_POST['par2'] );
+    $resultado     = mysql_query("  SELECT usu_nombres FROM usuario
+                                 WHERE usu_id = '$id_usuario' AND usu_token = '$token' ");
     if (mysql_num_rows($resultado) > 0){
       $nuevo_token = generateRandomString();
-      mysql_query(" UPDATE usuario SET usu_token = '$nuevo_token' WHERE usu_nickname = '$usuario' ");
+      mysql_query(" UPDATE usuario SET usu_token = '$nuevo_token'
+                    WHERE usu_id = '$id_usuario' AND usu_token = '$token' ");
       $resultado = [ 'respuesta' => 'funciono'];
     } else {
       $resultado = [ 'respuesta' => 'fallo'];
@@ -31,15 +32,16 @@
   }
 
   function validar_token(){
-      $usuario    = mysql_real_escape_string( $_POST['detalle1'] );
-      $token      = mysql_real_escape_string( $_POST['detalle2'] );
-      $resultado  = mysql_query("  SELECT per_id FROM leapp2_persona
-                                   WHERE per_id = '$usuario' AND per_token_sesion = '$token' ");
+      $id_usuario    = mysql_real_escape_string( $_POST['par1'] );
+      $token      = mysql_real_escape_string( $_POST['par2'] );
+      $resultado  = mysql_query("  SELECT usu_id FROM usuario
+                                   WHERE usu_id = '$id_usuario' AND usu_token = '$token' ");
       if (mysql_num_rows($resultado) > 0){
-          return $resultado;
+        $resultado = [ 'respuesta' => 'ok'];
       } else {
-        return false;
+        $resultado = [ 'respuesta' => 'fallo'];
       }
+      return $resultado;
     }
 
     function crear_sesion(){
@@ -82,7 +84,7 @@
       $resultados = crear_sesion();
     } else if ( $peticion == 'cerrar_sesion'){
       $resultados = cerrar_sesion();
-    } else if ( $peticion == 'validar'){
+    } else if ( $peticion == 'validar_token'){
       $resultados = validar_token();
     } else {
       header('HTTP/1.1 405 Método no encontrado!');

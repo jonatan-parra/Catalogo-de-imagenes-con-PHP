@@ -1,42 +1,44 @@
 $(document).ready(function() {
+  verificar_usuario();  // Verifica que la sesion del usuario sea valida
   get_categorias();  // Se obtienen todas las categorias de la base de datos
   get_mis_imagenes(); // Carga las imagenes del usuario
 });
 
-var url_login = "php/login/login.php"
 
-var url_consulta = "php/consultas/consultar.php?"
-
-var url_insertar = "php/inserciones/insertar.php?"
-
-
-// Loguea al usuario
-$('#form_login').submit(function(evento) {
-  evento.preventDefault();
-  datos_formulario =  $(this).serialize();
-  console.log(url_login + datos_formulario);
-  $.ajax({
-    url: url_login,
-    data: datos_formulario,
-    type: 'POST',
-    dataType: 'json',
-    success: function(datos) {
-      if (datos.respuesta == "ok"){
-        localStorage["id_usuario"] = datos.id_usuario; // Guarda el id del usuario
-        localStorage["nickname"] = datos.nickname; // Mantiene el nickname del usuario
-        localStorage["token"] = datos.token;       // Guarda el token corrrespondiente a la sesión
-        window.location = "plataforma.html";
-      } else {
-        console.log("No entro");
+// Verifica que las credenciales del usuario sean validas
+function verificar_usuario(){
+  if ( localStorage["id_usuario"] ){
+    // Si existen datos en el localStorage verifica que sean correctos
+    datos_sesion = "peticion=validar_token&par1=" + localStorage["id_usuario"] + "&par2=" + localStorage["token"];
+    $.ajax({
+      url: url_login,
+      data: datos_sesion,
+      type: 'POST',
+      dataType: 'json',
+      success: function(datos) {
+        if (datos.respuesta == "ok"){
+          // si lo datos son correctos no hace nada
+        } else {
+          // Si los datoss son incorrecto borra el localStorage y redirecciona al inicio
+          localStorage["id_usuario"] = ""; // Borra el id del usuario
+          localStorage["nickname"] = "";   // Borra el nickname del usuario
+          localStorage["token"] = "";      // Borra el token corrrespondiente a la sesión
+          //window.location = "index.html";
+          console.log("Redireccionando al inicio");
+        }
+      },
+      error : function( request, error ){
+        console.log("Error en ajax de verificar_usuario");
+        console.log(error);
+        console.log(request);
       }
-    },
-    error : function( request, error ){
-      console.log("Error en ajax del login");
-      console.log(error);
-      console.log(request);
-    }
-  });
-});
+    });
+  } else {
+    // Si no existen datos en el localStorage redirecciona automaticamente al index
+    window.location = "index.html";
+  }
+}
+
 
 // Obtiene las categorias usadas en el formulario de creación
 function get_categorias(){
@@ -63,8 +65,26 @@ function get_mis_imagenes(){
   });
 }
 
-// Obtiene los datos para crear un nuevo archivo
+// Cierra la sesion en el servidor y borra los parametros locales
 $( "#btn_cerrar_sesion" ).click(function() {
+  datos_sesion = "peticion=cerrar_sesion&par1=" + localStorage["id_usuario"] + "&par2=" + localStorage["token"];
+  $.ajax({
+    url: url_login,
+    data: datos_sesion,
+    type: 'POST',
+    dataType: 'json',
+    success: function(datos) {
+      if (datos.respuesta == "ok"){
+        //window.location = "index.html";
+      } else {
+      }
+    },
+    error : function( request, error ){
+      console.log("Error en ajax del cerrar sesion");
+      console.log(error);
+      console.log(request);
+    }
+  });
   localStorage["id_usuario"] = ""; // Borra el id del usuario
   localStorage["nickname"] = "";   // Borra el nickname del usuario
   localStorage["token"] = "";      // Borra el token corrrespondiente a la sesión
@@ -104,48 +124,3 @@ $('#formulario_creacion').submit(function(evento) {
     }
   });
 });
-
-
-
-/*
-
-$('#formulario_pregrado').submit(function(evento) {
-  datos_formulario =  $(this).serialize();
-  ajax_general(evento, datos_formulario, '#formulario_pregrado', "#modal-pregrado" );
-});
-
-$('#formulario_posgrado').submit(function(evento) {
-  datos_formulario =  $(this).serialize();
-  ajax_general(evento, datos_formulario, '#formulario_posgrado', "#modal-posgrado");
-  console.log("Entro");
-});
-*/
-/*
-function ajax_general(evento, datos_formulario, id_formulario, id_modal){
-  evento.preventDefault();
-  $.ajax({
-    url: url_insercion,
-    data: datos_formulario,
-    type: 'GET',
-    dataType: 'json',
-    success: function(datos) {
-      if (datos == true){
-        //console.log("retorno true");
-        $(id_modal).modal("hide");
-        $(id_formulario)[0].reset();
-        //alert("Su respuesta ha sido registrada");
-        $('#modal-aceptacion').modal('show');
-      } else {
-        $(id_modal).modal("hide");
-        $(id_formulario)[0].reset();
-        $('#modal-fallo').modal('show');
-      }
-    },
-    error : function( request, error ){
-      $(id_modal).modal("hide");
-      $(id_formulario)[0].reset();
-      $('#modal-fallo').modal('show');
-    }
-  });
-}
-/* */
