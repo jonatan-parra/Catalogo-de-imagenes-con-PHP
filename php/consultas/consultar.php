@@ -1,5 +1,4 @@
 <?php
-
 //  --------- Inicio configuracion ---------- //
   header('Content-Type: application/json');
 
@@ -12,8 +11,6 @@
   or die ("Base de datos no disponible");
 
   mysql_query("SET NAMES 'utf8'");
-
-
   // ---------- Fin configuracion -------------- //
 
   // Retorna todas las categorias actuales
@@ -33,14 +30,11 @@
     } else {
       return false;
     }
-
   }
 
   // -----------Limpiar datos, elegir funcion y retornar respuesta ----------- //
-
     $peticion =  $_GET['peticion'];
     $peticion = mysql_real_escape_string($peticion);
-    //echo ("Entró al documento");
     if( $peticion == 'categorias') {
       $resultados = get_categorias();
     } else if ( $peticion == 'imagenes'){
@@ -49,10 +43,8 @@
       header('HTTP/1.1 405 Método no encontrado!');
       exit;
     }
-
-    //$número_filas = mysql_num_rows($resultados);
     if ($resultados == false){
-      // Nada
+      // No hacer nada
     } else {
       while ($row = mysql_fetch_array($resultados)){
         $all[] = $row;

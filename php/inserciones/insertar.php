@@ -16,7 +16,6 @@
     $nombre_imagen  = mysql_real_escape_string( $_POST["par1"] );
     $descripcion  = mysql_real_escape_string( $_POST["par2"] );
     $categoria   = mysql_real_escape_string( $_POST["par3"] );
-  //  $imagen = mysql_real_escape_string( $_POST["par4"] );
     $id_usuario   = mysql_real_escape_string( $_POST["par5"] );
 
     $tiempo = time();
@@ -33,12 +32,10 @@
     } else {
       $resultado = [ 'respuesta' => 'fallo'];
     }
-
     return $resultado;
   }
 
 // ----------- Fin nuevos registros -------------//
-
   $peticion = $_POST['peticion'];
   $peticion = mysql_real_escape_string($peticion);
 

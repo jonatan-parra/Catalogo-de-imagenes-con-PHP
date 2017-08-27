@@ -12,14 +12,14 @@
   or die ("Base de datos no disponible");
 
   mysql_query("SET NAMES 'utf8'");
-
-
   // ---------- Fin configuracion -------------- //
+
+  // Cierra la sesión del usuario, cambiando el token actual
   function cerrar_sesion(){
     $id_usuario    = mysql_real_escape_string( $_POST['par1'] );
     $token         = mysql_real_escape_string( $_POST['par2'] );
     $resultado     = mysql_query("  SELECT usu_nombres FROM usuario
-                                 WHERE usu_id = '$id_usuario' AND usu_token = '$token' ");
+                                    WHERE usu_id = '$id_usuario' AND usu_token = '$token' ");
     if (mysql_num_rows($resultado) > 0){
       $nuevo_token = generateRandomString();
       mysql_query(" UPDATE usuario SET usu_token = '$nuevo_token'
@@ -31,48 +31,50 @@
     return $resultado;
   }
 
+  // Verifica que el token sea valido
   function validar_token(){
-      $id_usuario    = mysql_real_escape_string( $_POST['par1'] );
-      $token      = mysql_real_escape_string( $_POST['par2'] );
-      $resultado  = mysql_query("  SELECT usu_id FROM usuario
-                                   WHERE usu_id = '$id_usuario' AND usu_token = '$token' ");
-      if (mysql_num_rows($resultado) > 0){
-        $resultado = [ 'respuesta' => 'ok'];
-      } else {
-        $resultado = [ 'respuesta' => 'fallo'];
-      }
-      return $resultado;
+    $id_usuario    = mysql_real_escape_string( $_POST['par1'] );
+    $token      = mysql_real_escape_string( $_POST['par2'] );
+    $resultado  = mysql_query("  SELECT usu_id FROM usuario
+                                 WHERE usu_id = '$id_usuario' AND usu_token = '$token' ");
+    if (mysql_num_rows($resultado) > 0){
+      $resultado = [ 'respuesta' => 'ok'];
+    } else {
+      $resultado = [ 'respuesta' => 'fallo'];
     }
+    return $resultado;
+  }
 
-    function crear_sesion(){
-      $usuario    = mysql_real_escape_string( $_POST['par1'] );
-      $contrasena = mysql_real_escape_string( $_POST['par2'] );
-      $resultado  = mysql_query(" SELECT usu_id
-                                  FROM usuario
-                                  WHERE usu_nickname = '$usuario' AND usu_contrasena = '$contrasena' ");
+  // Crea una sesión y le asigna un token al usuario
+ function crear_sesion(){
+    $usuario    = mysql_real_escape_string( $_POST['par1'] );
+    $contrasena = mysql_real_escape_string( $_POST['par2'] );
+    $resultado  = mysql_query(" SELECT usu_id
+                                FROM usuario
+                                WHERE usu_nickname = '$usuario' AND usu_contrasena = '$contrasena' ");
 
-      $token = generateRandomString();
+    $token = generateRandomString();
 
-      if ( mysql_num_rows($resultado) > 0) {
-        mysql_query(" UPDATE usuario SET usu_token = '$token' WHERE usu_nickname = '$usuario' ");
-        $res2 = mysql_fetch_array($resultado);
-        $usu_id = $res2['usu_id'];
-        $resultado = [ 'respuesta' => 'ok', 'nickname' => $usuario, 'token' => $token, 'id_usuario' => $usu_id ];
-      } else {
-        $resultado = [ 'respuesta' => 'fallo'];
-      }
-      return $resultado;
+    if ( mysql_num_rows($resultado) > 0) {
+      mysql_query(" UPDATE usuario SET usu_token = '$token' WHERE usu_nickname = '$usuario' ");
+      $res2 = mysql_fetch_array($resultado);
+      $usu_id = $res2['usu_id'];
+      $resultado = [ 'respuesta' => 'ok', 'nickname' => $usuario, 'token' => $token, 'id_usuario' => $usu_id ];
+    } else {
+      $resultado = [ 'respuesta' => 'fallo'];
     }
+    return $resultado;
+  }
 
-    //Genera un string aleatorio de tamano n para usar en los tokens de sesion
-    function generateRandomString($length = 15) {
-      $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      $charactersLength = strlen($characters);
-      $randomString = '';
-      for ($i = 0; $i < $length; $i++) {
-          $randomString .= $characters[rand(0, $charactersLength - 1)];
-      }
-      return $randomString;
+  //Genera un string aleatorio de tamano n para usar en los tokens de sesion
+  function generateRandomString($length = 15) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
   }
 
   // -----------Limpiar datos, elegir funcion y retornar respuesta ----------- //
